@@ -14,7 +14,7 @@ A simple RESTful API for managing a todo list, built with Go and stores data in 
 ## Setup Instructions
 
 1. Clone the project
-git clone [https://github.com/yourusername/todo-list-practice.git](https://github.com/boraprae/go-lang-practice.git)
+git clone [https://github.com/boraprae/go-lang-practice.git](https://github.com/boraprae/go-lang-practice.git)
 cd todo-list-practice
 
 2. (Optional) Generate go.sum
