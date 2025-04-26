@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/rs/cors" // เพิ่มตรงนี้ด้วย
 )
 
 type Todo struct {
@@ -73,8 +75,7 @@ func addTodo(w http.ResponseWriter, r *http.Request) {
 	var t Todo
 	err := json.NewDecoder(r.Body).Decode(&t)
 	if err != nil {
-		// เพิ่มการแสดง error ใน log และไม่ให้แสดง "Invalid input" หากไม่มีข้อผิดพลาด
-		log.Println("Error decoding input:", err) // แสดง error ที่เกิดขึ้นใน log
+		log.Println("Error decoding input:", err)
 		http.Error(w, "Invalid input", 400)
 		return
 	}
@@ -153,7 +154,8 @@ func deleteTodo(w http.ResponseWriter, r *http.Request) {
 func main() {
 	loadTodos()
 
-	http.HandleFunc("/todos", func(w http.ResponseWriter, r *http.Request) {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/todos", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
 			getTodos(w, r)
@@ -163,8 +165,7 @@ func main() {
 			http.Error(w, "Method not allowed", 405)
 		}
 	})
-
-	http.HandleFunc("/todos/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/todos/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPut:
 			updateTodo(w, r)
@@ -175,6 +176,9 @@ func main() {
 		}
 	})
 
+	// wrap mux with CORS middleware
+	handler := cors.AllowAll().Handler(mux)
+
 	log.Println("🚀 Server running at http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }

@@ -20,36 +20,36 @@ cd todo-list-practice
 2. (Optional) Generate go.sum
 If not already present, run:
 
---bash--
+````bash````
 `go mod tidy`
 
 This will generate the go.sum file.
 
 ## Running with Docker
 1. Build the Docker image
---bash--
+````bash````
 `docker build -t todo-app .`
 
 2. Create an empty JSON file (if not existing)
---bash--
+````bash````
 `echo [] > todos.json`
 
 3. Run the container
 Bind mount the todos.json into the container to persist data:
 
---bash--
+````bash````
 `docker run -p 8080:8080 -v ${PWD}/todos.json:/app/todos.json todo-app`
 
 (If you are using PowerShell on Windows, replace ${PWD} with $PWD.)
 
 ## API Endpoints
 ### Get all todos
---http--
+````http````
 `GET /todos`
 
 Response:
 
--json--
+````json````
 [
   {
     "id": 1,
@@ -59,7 +59,7 @@ Response:
 ]
 
 ### Add a new todo
---http--
+````http````
 `POST /todos`
 `Content-Type: application/json`
 
